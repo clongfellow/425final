@@ -1,8 +1,9 @@
-create table customers (
-	isMember bool, 
-	plate_num char(7) not null, 
+create table users (
+	username char (20),
+	is_role char(20), 
+	plate_num char(7), 
 	temp_plate char(7), 
-	primary key (plate_num)
+	primary key (username)
 );
 create table lots (
 	lot_id int not null, 
@@ -12,10 +13,10 @@ create table lots (
 create table spots (
 	spot_num int not null, 
 	lot_id int,
-	reserved_by char(7),
+	reserved_by char(20),
 	primary key (spot_num),
 	foreign key (lot_id) references lots(lot_id),
-	foreign key (reserved_by) references customers(plate_num)
+	foreign key (reserved_by) references users(username)
 );
 create table reservation (
 	member bool, 
@@ -27,4 +28,4 @@ create table reservation (
 create role a_member;
 create role non_member;
 create role staff;
-create role administrator;
+create role admin;
