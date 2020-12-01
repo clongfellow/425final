@@ -15,7 +15,7 @@ create table spots (
 	reserved_by char(7),
 	primary key (spot_num),
 	foreign key (lot_id) references lots(lot_id),
-	foreign key (reserved_by) references users(plate_num)
+	foreign key (reserved_by) references customers(plate_num)
 );
 create table reservation (
 	member bool, 
