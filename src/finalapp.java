@@ -72,19 +72,43 @@ public class finalapp {
 	  }//end main
 	   
 	   //member dashboard method
-	   static void memberDash() {
-		    System.out.println("I just got executed!");
+	   static void memberDash() throws SQLException{
+		   System.out.println("make reservation, or add plate? (mr, ap)");
+		    input = scan.nextLine();
+		    if(input.equals("mr")){
+		    	String cname = USER;
+		    	System.out.println("lot #?");
+		    	int lotNum = scan.nextInt();
+		    	System.out.println("spot #?");
+		    	int spotNum = scan.nextInt();
+		    	System.out.println("start time? YYYY-MM-DD HH:MM:SS");
+		    	String startTime = scan.nextLine();
+		    	System.out.println("end time? YYYY-MM-DD HH:MM:SS");
+		    	String endTime = scan.nextLine();
+		    	makeReservation(cname, "member", lotNum, spotNum, startTime, endTime);
+		    }
 		  }
 	      //add temp plate 
 	   //nonmember dashboard method
-	   static void nonmemberDash() {
-		    System.out.println("I just got executed!");
+	   static void nonmemberDash() throws SQLException{
+		   System.out.println("make reservation:");
+		   String cname = USER;
+	    	System.out.println("lot #?");
+	    	int lotNum = scan.nextInt();
+	    	System.out.println("spot #?");
+	    	int spotNum = scan.nextInt();
+	    	System.out.println("start time? YYYY-MM-DD HH:MM:SS");
+	    	String startTime = scan.nextLine();
+	    	System.out.println("end time? YYYY-MM-DD HH:MM:SS");
+	    	String endTime = scan.nextLine();
+	    	makeReservation(cname, "nonmember", lotNum, spotNum, startTime, endTime);
 		  }
 	      //
 	   //staff dashboard
 	   	  //make reservation, get or change user info
 	   static void staffDash() {
-		    System.out.println("I just got executed!");
+		   System.out.println("make reservation, view info, or change info? (mr, vi, ci)");
+		    input = scan.nextLine();
 		  }
 	   //admin dashboard
 	   static void adminDash() throws SQLException {
@@ -120,18 +144,29 @@ public class finalapp {
 		   System.out.println("Attempting reservation...");
 		   if(type.equals("drivein")){
 			   stmt = conn.prepareStatement("insert into reservations(drive_in, start_time, end_time, res_num, lot_id, spot_num)\r\n"
-				   		+ "VALUES (?, ?, ?, ?);"
-				   		+ "update spots set available = false where spot_num = ? and lot_id = ?");
-				   stmt.setBoolean(1, true);
-				   stmt.setTimestamp(2, java.sql.Timestamp.valueOf("startTime"));
-				   stmt.setTimestamp(3, java.sql.Timestamp.valueOf("endTime"));
-				   stmt.setInt(4, n);
-				   stmt.setInt(5, lotNum);
-				   stmt.setInt(6, spotNum);
-				   stmt.setInt(7, spotNum);
-				   stmt.setInt(8, lotNum);
-				   stmt.execute();
+				   		+ "VALUES (?, ?, ?, ?);");
+					   //how to implement availability at specific timeslots);
 		   }
+		   if(type.equals("member")){
+			   stmt = conn.prepareStatement("insert into reservations(member, start_time, end_time, res_num, lot_id, spot_num)\r\n"
+				   		+ "VALUES (?, ?, ?, ?);");
+					   //how to implement availability at specific timeslots);
+		   }
+		   if(type.equals("nonmember")){
+			   stmt = conn.prepareStatement("insert into reservations(online, start_time, end_time, res_num, lot_id, spot_num)\r\n"
+				   		+ "VALUES (?, ?, ?, ?);");
+					   //how to implement availability at specific timeslots);
+		   }
+		   stmt.setBoolean(1, true);
+		   stmt.setTimestamp(2, java.sql.Timestamp.valueOf("startTime"));
+		   stmt.setTimestamp(3, java.sql.Timestamp.valueOf("endTime"));
+		   stmt.setInt(4, n);
+		   stmt.setInt(5, lotNum);
+		   stmt.setInt(6, spotNum);
+		   stmt.setInt(7, spotNum);
+		   stmt.setInt(8, lotNum);
+		   stmt.execute();
+		   
 		   System.out.println("Reservation Complete!");
 	   }//end makeReservation
 	   static void changeMembership(String user, String member) throws SQLException {
@@ -154,5 +189,6 @@ public class finalapp {
 			   stmt.execute();
 	       }
 	    }//end changeMembership
+	   //todo: viewUserInfo, changeUserInfo, report, (maybe CreateUser?)
 }//end finalapp
 

@@ -17,8 +17,6 @@ create table lots (
 create table spots (
 	spot_num int not null, 
 	lot_id int NOT null,
-	reserved_by char(20),
-	available bool,
 	primary key (spot_num, lot_id),
 	foreign key (lot_id) references lots(lot_id)
 );
