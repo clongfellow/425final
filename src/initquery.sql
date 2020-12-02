@@ -22,6 +22,8 @@ create table reservation (
 	member bool, 
 	drive_in bool,
 	online bool,
+	start_time timestamp,
+	end_time timestamp,
 	res_num int not null, 
 	primary key (res_num)
 );
@@ -29,3 +31,7 @@ create role a_member;
 create role non_member;
 create role staff;
 create role admin;
+ALTER ROLE admin WITH superuser;
+CREATE USER joe WITH password 1234;
+GRANT admin TO joe; 
+

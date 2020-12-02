@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Random;
 import java.util.Scanner;
 
 public class finalapp {
@@ -7,16 +9,15 @@ public class finalapp {
 	//  Database credentials
 	   static String USER = "postgres";
 	   static String PASS = "1234";
-	   static String sql;
+	   static String input;
+	   static Scanner scan = new Scanner(System.in);
+	   static Connection conn = null;
+	   static PreparedStatement stmt = null;
 	   public static void main(String[] args) {
 		   //login / register
-		   Connection conn = null;
-		   PreparedStatement stmt = null;
-		   
 		   try{
 		      //STEP 2: Register JDBC driver
 		      Class.forName("org.postgresql.Driver");
-		      Scanner scan = new Scanner(System.in);
 			  System.out.println("input username: ");
 		      USER = scan.nextLine();
 			  System.out.println("input password: ");
@@ -42,11 +43,7 @@ public class finalapp {
 		    	  String name = rs.getString("is_role").trim();
 		    	  System.out.println(name);
 		    	  if (name.equals("admin")){
-		    		  System.out.println("I just got executed!");
 		    		  adminDash();
-		    	  }
-		    	  else{
-		    		  System.out.println(name + "what");
 		    	  }
 		      }
 		      rs.close();
@@ -89,9 +86,37 @@ public class finalapp {
 		    System.out.println("I just got executed!");
 		  }
 	   //admin dashboard
-	   static void adminDash() {
-		    System.out.println("I just got executed!");
-		  }
-	   
-}//end finalapp
+	   static void adminDash() throws SQLException {
+		    System.out.println("make reservation, update membership, change info, or report? (mr, um, ci, r)");
+		    input = scan.nextLine();
+		    //need to implement checking if spot is reserved at given time
+		    if(input.equals("mr")){
+		    	System.out.println("customer name?");
+		    	String cname = scan.nextLine();
+		    	System.out.println("lot #?");
+		    	int lotNum = scan.nextInt();
+		    	System.out.println("spot #?");
+		    	int spotNum = scan.nextInt();
+		    	System.out.println("start time? YYYY-MM-DD HH:MM:SS");
+		    	String startTime = scan.nextLine();
+		    	System.out.println("end time? YYYY-MM-DD HH:MM:SS");
+		    	String endTime = scan.nextLine();
+		    	makeReservation(cname, "drivein", lotNum, spotNum, startTime, endTime);
+		    }
+	   }
+	   static void makeReservation(String cname, String type, int lotNum, int spotNum, String startTime, String endTime) throws SQLException{
+		   Random rnd = new Random();
+		   //need query to check if unique
+		   int n = 10000 + rnd.nextInt(90000);
+		   if(type.equals("drivein")){
+			   stmt = conn.prepareStatement("insert into reservations(drive_in, start_time, end_time, res_num)\r\n"
+				   		+ "VALUES (?, ?, ?, ?);");
+				   stmt.setBoolean(1, true);
+				   stmt.setTimestamp(2, java.sql.Timestamp.valueOf("startTime"));
+				   stmt.setTimestamp(3, java.sql.Timestamp.valueOf("endTime"));
+				   stmt.setInt(4, n);
+		   }
+		   
+	   }
+	   }//end finalapp
 
